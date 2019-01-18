@@ -1,0 +1,132 @@
+docker-compose
+
+5. Docker Compose
+=================
+5.1 Installation
+----------------
+sudo apt install docker-compose    
+
+5.2 Docker compose
+
+1. Check version
+docker-compose --version
+
+2. Build
+2.1 Download files
+
+2.2 Inspect docker-compose file
+nano docker-compose.yml
+--------------[Start CUT]--------------------
+version: "3.4"
+services:
+   web:
+      build: 
+        context: ./web
+        dockerfile: dockerfile          # optional for specific dockerfile
+      container_name: nodejs            # optional for specific container name
+      command: ["node","hello.js"]      # optional for override command on dockerfile
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:3000"]  # option for health check and send curl for check http://localhost:3000
+        interval: 30s                                         # interval health check
+        timeout: 10s                                          # timeout for check
+        retries: 3                                            # maximum retries
+        start_period: 30s                                     # start period <news on 3.4>
+      ports:
+        - 3000:3000
+
+--------------[END CUT]--------------------
+
+2.3 Inspect ./web/dockerfile 
+
+nano ./web/dockerfile 
+--------------[Start CUT]--------------------
+FROM labdocker/alpine:latest 
+MAINTAINER Praparn Lueangphoonlap (eva10409@gmail.com) 
+LABEL Description="NodeJS/NGINX Build Container" Version="1.0"
+ENV NODE_VERSION=v4.3.0 NPM_VERSION=2.14.12
+RUN apk update && \
+    apk add nodejs curl
+RUN mkdir /nodejs
+COPY hello.js /nodejs/
+CMD ["nginx","-c","/etc/nginx/nginx.conf"]
+WORKDIR /nodejs
+ENTRYPOINT ["node","hello.js"]
+EXPOSE 3000
+--------------[END CUT]--------------------
+
+sudo -s 
+docker-compose up -d
+
+3. Check Status
+ docker-compose  ps
+ curl http://127.0.0.1:3000
+ 
+ OR, test via Web browser
+ http://192.168.56.101:3000
+
+4. Control
+docker-compose stop
+docker-compose ps
+ Name              Command              State     Ports
+-------------------------------------------------------
+nodejs   node hello.js node hello.js   Exit 137        
+
+docker-compose start
+docker-compose ps
+ Name              Command             State           Ports         
+---------------------------------------------------------------------
+nodejs   node hello.js node hello.js   Up      0.0.0.0:3000->3000/tcp
+
+ curl http://127.0.0.1:3000
+
+
+
+5.2 Web Server : php + mysql 
+Source: https://medium.com/yii2-learning/มาลองสร้าง-lemp-stack-ง่ายๆ-ด้วย-docker-กัน-part1-5396f8dfc16f
+
+1. Download file from githup
+cd ~
+git clone https://github.com/cjundang/lab-dockercompose2.git
+
+2. Inspect files: docker-compose.ymal
+cd cd lab-dockercompose2
+cat lemp_docker/docker-compose.yml 
+
+--------------[Start CUT]--------------------
+version: '2'
+services:
+
+  php:
+    image: php:7-apache
+    container_name: lemp_php7_apache
+    restart: always
+    volumes:
+      - ./html/:/var/www/html
+    ports:
+      - 80:80
+
+  db:
+    image: mariadb:latest
+    container_name: lemp_mariadb
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=123132123
+      - MYSQL_DATABASE=lemp_db
+      - MYSQL_USER=lemp
+      - MYSQL_PASSWORD=123456
+
+--------------[END CUT]--------------------
+
+3. Inspect files: index.html 
+cat lemp_docker/html/index.php 
+
+<?php
+phpinfo();
+?>"
+
+4. Control command 
+    docker-compose up -d
+    docker-compose ps 
+    docker-compose stop
+    docker-compose down
+    docker-compose ps
