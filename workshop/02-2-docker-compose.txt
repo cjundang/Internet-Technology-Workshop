@@ -13,6 +13,7 @@ docker-compose --version
 
 2. Build
 2.1 Download files
+git clone https://github.com/cjundang/lab-dockercompose1.git
 
 2.2 Inspect docker-compose file
 nano docker-compose.yml
