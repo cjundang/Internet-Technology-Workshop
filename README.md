@@ -120,7 +120,8 @@ Gateway# exit
 test, 
 ```
 Gateway> 
-Gateway> enable Password: <cisco> 
+Gateway> enable 
+Password: <cisco> 
 Gateway#
 ```
 
@@ -218,6 +219,18 @@ Serial0/0/0            unassigned      YES unset  administratively down down
 Serial0/0/1            unassigned      YES unset  administratively down down 
 Vlan1                  unassigned      YES unset  administratively down down
 ```
+
+__Test__
+- set Hostname RouterA and IP address 10.0.1.1/24 to Router 1 at gig0/0
+- set Hostname RouterA and IP address 10.0.1.2/24 to Router 2 at gig0/0
+- ping test as 
+```
+RouterA# ping 10.0.1.1
+RouterA# ping 10.0.1.2
+RouterA# ping 10.0.1.3
+```
+
+
 
 6. Set IP addess to serial interface. Connect two 1900 routers with serial cable at serial0/0/0 for both router. Then assign two rouers named Router1 and Router2,
 
