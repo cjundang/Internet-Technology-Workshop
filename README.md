@@ -310,7 +310,9 @@ Router2#
 ```
 
 10. Save configuration for next reboot,
-
+```
+Router# copy run start
+```
 11. To show current running congfigure file,
 ```
 Router1#show running-config 
