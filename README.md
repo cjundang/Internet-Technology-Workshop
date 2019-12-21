@@ -503,11 +503,21 @@ Switch1(config-if-range)#exit
 Switch# sh vlan
 ```
 6. Test ping
+At PC 10.0.1.1
 ```
-10.0.0.1 --> 10.0.0.2
-10.0.0.1 --> 10.0.0.3
-10.0.0.2 --> 10.0.0.1
+> ping 10.0.1.2
+> ping 10.0.1.3
+> ping 10.0.1.4
 ```
+
+At PC 10.0.1.3
+```
+> ping 10.0.1.1
+> ping 10.0.1.2
+> ping 10.0.1.4
+```
+
+
 7. Assigned ports fast0/10-19 to VLAN
 ```
 Switch1(config)#interface range fastEthernet 0/10-19
