@@ -222,7 +222,7 @@ Vlan1                  unassigned      YES unset  administratively down down
 
 __Test__
 - set Hostname RouterA and IP address 10.0.1.1/24 to Router 1 at gig0/0
-- set Hostname RouterA and IP address 10.0.1.2/24 to Router 2 at gig0/0
+- set Hostname RouterB and IP address 10.0.1.2/24 to Router 2 at gig0/0
 - ping test as 
 ```
 RouterA# ping 10.0.1.1
