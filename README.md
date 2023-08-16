@@ -78,7 +78,7 @@ Gateway con0 is now available
 Press RETURN to get started.
 
 ================================================
-# Admin Email: cjundang@gmail.com              #
+# Admin Email: cjundang@mymail.com              #
 # Tel No.: 075672209                           #
 ================================================
 
@@ -419,10 +419,6 @@ Switch#
 ```
 Switch# copy run start
 ```
-
-### __Packet Tracer__
-
-
 
 ### __Network Devices Configuration__
 
