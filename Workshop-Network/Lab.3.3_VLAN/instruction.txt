@@ -1,0 +1,86 @@
+VLAN
+----
+0. All computers can connect togerther.
+
+Scenarios,
+There are 2 VLAN named Admin, programmer.
+VLAN named admin is assigned to fast0/1-9, whereas VLAN named programmer is assigned to fast0/10-19
+
+1. Show current VLANs
+Switch1#show vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+1002 fddi-default                     act/unsup 
+1003 token-ring-default               act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trnet-default                    act/unsup 
+
+2. Creat 2 VLANs
+Switch1#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch1(config)#vlan 10
+Switch1(config-vlan)#name admin
+Switch1(config-vlan)#exit
+Switch1(config)#vlan 20
+Switch1(config-vlan)#name programmer
+Switch1(config-vlan)#exit
+Switch1(config)#
+Switch1(config)#exit
+
+3. Show current VLANs
+Switch1#show vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   admin                            active    
+20   programmer                       active    
+1002 fddi-default                     act/unsup 
+1003 token-ring-default               act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trnet-default                    act/unsup 
+
+4. Assigned ports fast0/1-9 to VLAN
+Switch1#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch1(config)#interface range fastEthernet 0/1-9
+Switch1(config-if-range)#switchport mode access 
+Switch1(config-if-range)#switchport access vlan 10
+Switch1(config-if-range)#no shutdown 
+Switch1(config-if-range)#exit
+5. Show VLAN
+Switch# sh vlan
+
+6. Test ping
+10.0.0.1 --> 10.0.0.2
+10.0.0.1 --> 10.0.0.3
+10.0.0.2 --> 10.0.0.1
+
+7. Assigned ports fast0/10-19 to VLAN
+Switch1(config)#interface range fastEthernet 0/10-19
+Switch1(config-if-range)#switchport mode access 
+Switch1(config-if-range)#switchport access vlan 20
+Switch1(config-if-range)#no shutdown 
+Switch1(config-if-range)#end
+
+8. Show VLAN
+Switch# sh vlan
+
+9. Test ping
+

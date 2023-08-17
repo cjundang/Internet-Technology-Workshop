@@ -1,0 +1,139 @@
+VLAN with TRUNK
+---------------
+Objectives: PC1 & PC3 are in VLAN 10 while PC0 & PC2 are in VLAN 20
+Switch1 & 2 are connected via gig0/0
+VLAN 10 is assigned for fast0/1-10 of both Switches.
+VLAN 20 is assigned for fast0/11-20 for both Switches.
+
+This lab start form all PCs are connected and successfully ping together.
+
+1. Change switch's hostname to Switch1 & switch2
+
+(Switch1)
+Switch>ena
+Switch#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname Switch1
+Switch1(config)# exit
+
+2. Assigned all interfaces are access mode (set both Switch1* Switch2)
+
+(Switch1)
+Switch1#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch1(config)#interface range fastEthernet 0/1-24
+Switch1(config-if-range)#switchport mode access
+Switch1(config-if-range)#exit
+Switch1(config)#exit
+Switch1#
+
+3. Create VLAN 10 and 20 in switch1 & switch2
+(Switch1)
+Switch1#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch1(config)#vlan 10
+Switch1(config-vlan)#exit
+Switch1(config)#vlan 20
+Switch1(config-vlan)#
+Switch1(config-vlan)#exit
+Switch1(config)#exit
+
+To show vlan status, 
+Switch1# sh vlan
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   VLAN0010                         active    
+20   VLAN0020                         active    
+
+
+4. Assigned fast0/1-10 to VLAN 10, fast11-20 to VLAN20 in both switch
+
+(Switch1)
+Switch1#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch1(config)#interface range fastEthernet 0/1-10
+Switch1(config-if-range)#switchport access vlan 10
+Switch1(config-if-range)#exit
+Switch1(config)#interface range fastEthernet 0/11-20
+Switch1(config-if-range)#switchport access vlan 20
+Switch1(config-if-range)#
+
+Show vlan again, 
+Switch1#sh vlan
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   VLAN0010                         active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10
+20   VLAN0020                         active    Fa0/11, Fa0/12, Fa0/13, Fa0/14
+                                                Fa0/15, Fa0/16, Fa0/17, Fa0/18
+                                                Fa0/19, Fa0/20
+
+5. Ping test
+6. Create TRUNK in gig0/1 for both switches 
+
+(Swittch1)
+Switch1#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch1(config)#interface gigabitEthernet 0/1
+Switch1(config-if)#switchport mode trunk 
+
+-- In packet tracer cannnot run this command
+Switch1(config-if)#switchport trunk encapsulation dot1q 
+
+7. Ping test
+8. Show trunk status
+
+(switch1)
+Switch1#sh interfaces trunk 
+Port        Mode         Encapsulation  Status        Native vlan
+Gig0/1      on           802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+Gig0/1      1-1005
+
+Port        Vlans allowed and active in management domain
+Gig0/1      1,10,20
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Gig0/1      1,10,20
+
+9. Allow only vlan 10's frames are sent over trunk
+
+Switch1#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch1(config)#interface gigabitEthernet 0/1
+Switch1(config-if)#switchport trunk allowed vlan 10
+Switch1(config-if)#exit
+Switch1(config)#exit
+Switch1#
+
+10. Show trunk status and ping test
+Switch1#show interfaces trunk 
+Port        Mode         Encapsulation  Status        Native vlan
+Gig0/1      on           802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+Gig0/1      10
+
+Port        Vlans allowed and active in management domain
+Gig0/1      10
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Gig0/1      none
+

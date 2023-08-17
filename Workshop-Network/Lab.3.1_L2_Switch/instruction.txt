@@ -1,0 +1,64 @@
+L2 Switch
+
+1. Access CLI console via serial port in PC0
+2. Set IP address to PC1 with 10.0.2.2/24
+3. Set IP address 10.0.2.1/24 to VLAN1 in switch
+
+To set ip address
+Switch>enable 
+Switch#configure t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#int vlan1
+Switch(config-if)#ip address 10.0.2.1 255.255.255.0
+Switch(config-if)#no shutdown 
+%LINK-5-CHANGED: Interface Vlan1, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan1, changed state to up
+
+4. To set password for remote access,
+Switch(config-if)#line vty 0 4
+Switch(config-line)#passw
+Switch(config-line)#password cisco
+Switch(config-line)#login
+Switch(config-line)#exit
+Switch(config)#ena
+Switch(config)#enable se
+Switch(config)#enable secret cisco
+Switch(config)#exit
+Switch#
+%SYS-5-CONFIG_I: Configured from console by console
+
+5. (PC0) access to switch via telent command
+C:\>  telnet 10.0.2.1
+Trying 10.0.2.1... Open
+
+User Access Verification
+Password: <cisco>
+Switch>
+
+6. To configure a single port in switch
+Switch#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#interface fastEthernet 0/1
+Switch(config-if)#speed auto
+Switch(config-if)#duplex auto 
+Switch(config-if)#no shutdown 
+Switch(config-if)#end
+
+7. To configure set of port in switch
+
+Switch#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#interface range fastEthernet 0/2-24
+Switch(config-if-range)#duplex auto 
+Switch(config-if-range)#speed auto 
+Switch(config-if-range)#no shutdown 
+Switch(config-if-range)#end
+Switch#
+
+8. Save configuration
+Switch# copy run start
+
+
+

@@ -1,0 +1,198 @@
+NAT
+---
+1. Set IP Address to PC0,1,2
+2. Set Hostname, IP addres to HQ, ISP, facebook
+(HQ)
+Router>enable 
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname HQ
+
+HQ(config)#interface gig0/0
+HQ(config-if)#ip address 10.0.0.1 255.255.255.0
+HQ(config-if)#no shutdown 
+HQ(config-if)#exit 
+
+HQ(config)#int serial 0/0/0
+HQ(config-if)#ip address 20.0.0.2 255.255.255.0
+HQ(config-if)#no shutdown 
+HQ(config-if)#exit
+
+(ISP)
+Router>ena
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname ISP
+
+ISP(config)#interface gig 0/0
+ISP(config-if)#ip address 30.0.0.1 255.0.0.0
+ISP(config-if)#no shutdown 
+ISP(config-if)#exit
+
+ISP(config)#interface serial 0/0/0
+ISP(config-if)#ip address 20.0.0.1 255.0.0.0
+ISP(config-if)#no shutdown 
+ISP(config-if)#clock rate 9600
+ISP(config-if)#exit
+
+ISP(config)#interface serial 0/0/1
+ISP(config-if)#ip address 40.0.0.2 255.0.0.0
+ISP(config-if)#no shutdown 
+ISP(config-if)#exit
+
+(facebook)
+Router>ena
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname facebook
+
+facebook(config)#interface serial 0/0/0
+facebook(config-if)#ip address 40.0.0.1 255.0.0.0
+facebook(config-if)#clock rate 9600 
+facebook(config-if)#no shutdown 
+facebook(config-if)#exit
+
+facebook(config)#interface gig0/0
+facebook(config-if)#ip address 50.0.0.1 255.0.0.0
+facebook(config-if)#no shutdown 
+facebook(config-if)#exit
+
+3. Show  information'interface
+(HQ)
+HQ#sh ip interface br
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     10.0.0.1        YES manual up                    up 
+GigabitEthernet0/1     unassigned      YES unset  administratively down down 
+Serial0/0/0            20.0.0.2        YES manual up                    up 
+Serial0/0/1            unassigned      YES unset  administratively down down 
+Vlan1                  unassigned      YES unset  administratively down down
+
+(ISP)
+ISP#sh ip interface br
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     30.0.0.1        YES manual up                    up 
+GigabitEthernet0/1     unassigned      YES unset  administratively down down 
+Serial0/0/0            20.0.0.1        YES manual up                    up 
+Serial0/0/1            40.0.0.2        YES manual up                    up 
+Vlan1                  unassigned      YES unset  administratively down down
+ISP#
+
+(facebook)
+facebook#sh ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     50.0.0.1        YES manual up                    up 
+GigabitEthernet0/1     unassigned      YES unset  administratively down down 
+Serial0/0/0            40.0.0.1        YES manual up                    up 
+Serial0/0/1            unassigned      YES unset  administratively down down 
+Vlan1                  unassigned      YES unset  administratively down down
+
+4. Set default route for PC0, 1, 2
+5. Set the optimal static route for router HQ and ISP
+
+(HQ)
+HQ#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+HQ(config)#ip route 0.0.0.0 0.0.0.0 20.0.0.1
+HQ(config)#exit
+
+HQ#sh ip route 
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is 20.0.0.1 to network 0.0.0.0
+
+ *   0.0.0.0/8 is subnetted, 1 subnets
+S*      0.0.0.0/8 [1/0] via 20.0.0.1
+     10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       10.0.0.0/8 is directly connected, GigabitEthernet0/0
+L       10.0.0.1/32 is directly connected, GigabitEthernet0/0
+     20.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       20.0.0.0/8 is directly connected, Serial0/0/0
+L       20.0.0.2/32 is directly connected, Serial0/0/0
+
+
+(ISP)
+ISP#configure 
+ISP(config)#ip route 0.0.0.0 0.0.0.0  40.0.0.1
+ISP(config)#exit
+
+ISP#sh ip route 
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is 40.0.0.1 to network 0.0.0.0
+
+ *   0.0.0.0/32 is subnetted, 1 subnets
+S*      0.0.0.0/32 [1/0] via 40.0.0.1
+     20.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       20.0.0.0/8 is directly connected, Serial0/0/0
+L       20.0.0.1/32 is directly connected, Serial0/0/0
+     30.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       30.0.0.0/8 is directly connected, GigabitEthernet0/0
+L       30.0.0.1/32 is directly connected, GigabitEthernet0/0
+     40.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       40.0.0.0/8 is directly connected, Serial0/0/1
+L       40.0.0.2/32 is directly connected, Serial0/0/1
+
+ISP#
+
+6. Ping test from all PCs
+C:\> ping 10.0.0.1
+C:\> ping 10.0.0.2
+C:\> ping 20.0.0.1
+C:\> ping 20.0.0.2
+C:\> ping 30.0.0.1
+C:\> ping 30.0.0.2
+C:\> ping 40.0.0.1
+C:\> ping 40.0.0.2
+C:\> ping 50.0.0.1
+C:\> ping 50.0.0.2
+
+6. Set NAT for internal networks 
+(HQ, 10.0.0.0/8)
+
+            Inside             Outside
+    [PC0]---------------[HQ]---------------[ISP]
+        .2             .1   .2            .1
+            10.0.0.0/8          20.0.0.0/8
+
+
+(HQ)
+HQ(config)#interface serial 0/0/0
+HQ(config-if)#ip nat outside
+HQ(config-if)#exit
+
+HQ(config)#interface gig0/0
+HQ(config-if)#ip nat inside
+HQ(config-if)#exit
+
+HQ(config)#access 1 permit 10.0.0.0 0.255.255.255 
+HQ(config)#ip nat inside source list 1 interface serial 0/0/0
+HQ(config)#exit
+
+(PC0,1,2)
+C:\> ping 10.0.0.1
+C:\> ping 10.0.0.2
+C:\> ping 20.0.0.1
+C:\> ping 20.0.0.2
+C:\> ping 30.0.0.1
+C:\> ping 30.0.0.2
+C:\> ping 40.0.0.1
+C:\> ping 40.0.0.2
+C:\> ping 50.0.0.1
+C:\> ping 50.0.0.2
+

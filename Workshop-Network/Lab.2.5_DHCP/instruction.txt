@@ -1,0 +1,37 @@
+DHCP
+----
+Case Study, there are many computers in 10.0.0.0/8 network. The 10.0.0.1, 10.255.255.253, 10.255.255.254 are static assigned for default gateway, PC and Server.
+Wheras, 10.0.0.0-10.0.0.255 are reserved for futher. 
+
+1. Create  IP Address Pool named ubines for 10.0.0.0/8. default gateway is 10.0.0.1, dns-server is 10.255.255.254.
+
+Router>ena
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#ip dhcp pool ubines
+Router(dhcp-config)#network 10.0.0.0 255.0.0.0
+Router(dhcp-config)#default-router 10.0.0.1
+Router(dhcp-config)#dns-server 10.255.255.254
+Router(config)#ip dhcp excluded-address 10.255.255.254
+Router(config)#ip dhcp excluded-address 10.255.255.253
+Router(config)#ip dhcp excluded-address 10.0.0.1 10.0.0.255
+Router(config)#exit
+Router#
+
+2. show dhcp status 
+Router#sh ip dhcp  binding 
+IP address       Client-ID/              Lease expiration        Type
+                 Hardware address
+
+3. Set PC0/1/2/3 as dhcp client.
+4. show dhcp status again.
+
+Router#sh ip dhcp  binding 
+IP address       Client-ID/              Lease expiration        Type
+                 Hardware address
+10.0.1.0         000C.CF33.6202           --                     Automatic
+10.0.1.1         00D0.BAB6.DD96           --                     Automatic
+10.0.1.2         0090.21B8.3B22           --                     Automatic
+10.0.1.3         0030.A304.811D           --                     Automatic
+

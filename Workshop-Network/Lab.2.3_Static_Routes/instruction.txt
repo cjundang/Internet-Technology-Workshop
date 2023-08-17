@@ -1,0 +1,154 @@
+Static Routers
+--------------
+
+Simple routing,
+1. Set IP Address for all devices
+    PC0 -> 10.0.1.2/24
+    PC1 -> 20.0.1.2/24
+    Router 
+        gig0/0 -> 10.0.1.1/24
+        gig0/1 -> 20.0.1.1/24
+
+(Router)
+Router>enable 
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#interface gigabitEthernet 0/0
+Router(config-if)#ip address 10.0.1.1 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config-if)#exit
+Router(config)#interface gigabitEthernet 0/1
+Router(config-if)#ip address 20.0.1.1 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config-if)#exit
+Router(config)#exit
+
+Router#sh ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     10.0.1.1        YES manual up                    up 
+GigabitEthernet0/1     20.0.1.1        YES manual up                    up 
+Vlan1                  unassigned      YES unset  administratively down down
+Router#
+
+2. (PC0) Ping test
+C:\> ping 10.0.1.1
+C:\> ping 20.0.1.1
+C:\> ping 20.0.1.2
+
+Discuss result?
+
+3. Set gateway, 10.0.1.1 for PC0, then ping test again
+C:\> ping 10.0.1.1
+C:\> ping 20.0.1.1
+C:\> ping 20.0.1.2
+
+Discuss result?
+
+3. Set gateway, 20.0.1.1 for PC1, then ping test again
+C:\> ping 10.0.1.1
+C:\> ping 20.0.1.1
+C:\> ping 20.0.1.2
+
+Discuss result?
+
+Two Routers,
+4. Assign hostname named Router2 and Router2 to Router2 and Router3
+(router2)
+Router>enable
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname Router2
+Router2(config)#exit
+
+(router3)
+Router>enable
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname Router3
+Router3(config)#exit
+
+5. Assign IP address to gig0/0 of router2. For router3, please asssign with yourself.
+(router2)
+Router2#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+
+Router2(config)#interface gigabitEthernet 0/0
+Router2(config-if)#ip address 50.0.0.1 255.255.255.0
+Router2(config-if)#no shutdown 
+Router2(config-if)# exit
+
+6. Assign IP address for PC2 and PC3, PC2 is in 50.0.0.0/24 while PC3 in 30.0.0.0/24
+7. Assign IP address for Router2 (40.0.0.1/24) and Router3 (40.0.0.2/24)
+
+Router2(config)#interface serial 0/0/0
+Router2(config-if)#ip address 40.0.0.1 255.255.255.252
+Router2(config-if)#clock rate 9600
+Router2(config-if)#no shutdown 
+
+8. Show configure
+Router2#sh ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     50.0.0.1        YES manual up                    up 
+GigabitEthernet0/1     unassigned      YES unset  administratively down down 
+Serial0/0/0            40.0.0.1        YES manual up                    up 
+Serial0/0/1            unassigned      YES unset  administratively down down 
+Vlan1                  unassigned      YES unset  administratively down down
+Router2#
+
+9. Ping test 
+(PC0)
+C:\> ping 50.0.0.1
+C:\> ping 40.0.0.1
+C:\> ping 40.0.0.2
+C:\> ping 30.0.0.1
+C:\> ping 30.0.0.2
+
+Set static route for PC
+9. Assign default router for PC2 and PC3
+- PC2 set 50.0.0.1 as default gateway 
+- PC3 set 30.0.0.1 as default gateway
+
+Set static router for Router
+10. Assign 30.0.0.0/24 and 40.0.0.2 as next hop in router2, then add static router for router3.
+(Router2)
+Router2#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router2(config)#ip route 30.0.0.0 255.255.255.0 40.0.0.2
+Router2(config)#exit
+
+Show routing table, 
+Router2#sh ip route 
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     30.0.0.0/24 is subnetted, 1 subnets
+S       30.0.0.0/24 [1/0] via 40.0.0.2
+     40.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       40.0.0.0/30 is directly connected, Serial0/0/0
+L       40.0.0.1/32 is directly connected, Serial0/0/0
+     50.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       50.0.0.0/24 is directly connected, GigabitEthernet0/0
+L       50.0.0.1/32 is directly connected, GigabitEthernet0/0
+
+Router2#
+
+11. Ping test 
+(PC0)
+C:\> ping 50.0.0.1
+C:\> ping 40.0.0.1
+C:\> ping 40.0.0.2
+C:\> ping 30.0.0.1
+C:\> ping 30.0.0.2
+

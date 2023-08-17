@@ -1,0 +1,98 @@
+WAN
+---
+PPP with PAP authentication,
+1. Set Hostname as B1
+Router>ena
+Router#configure 
+Router(config)#hostname B1
+B1(config)#exit
+B1#
+
+2. Add user name AAA password cisco 
+(B1)
+B1# configure terminal
+B1(config)#username AAA password cisco
+
+3. set IP Address to serial0/0/0
+(B1)
+B1#show controllers serial 0/0/0
+Interface Serial0/0/0
+Hardware is PowerQUICC MPC860
+DCE V.35, clock rate 2000000
+B1#configure 
+B1(config)#interface serial 0/0/0
+B1(config-if)#ip address 10.10.10.1 255.255.255.252
+B1(config-if)#clock rate 12800
+B1(config-if)#no shutdown 
+
+4. Show current encapsulation
+B1#show interfaces serial 0/0/0
+
+5. Eanable PPP encapsulation
+B1#configure 
+B1(config)#interface serial 0/0/0
+B1(config-if)#encapsulation ppp
+B1(config-if)#ppp pap sent-username BBB password cisco
+B1(config-if)#exit
+B1(config)#exit
+
+5. Repeat step 1-4,
+    set hosname of Router2 to B2
+    create username BBB with password cisco
+    set 10.10.10.2/30 to interface serial 0/0/0 as DCE
+    Enable ppp encapsulation
+
+6. Show result 
+B2#show interfaces serial 0/0/0
+Serial0/0/0 is up, line protocol is up (connected)
+  Hardware is HD64570
+  Internet address is 10.10.10.2/30
+  MTU 1500 bytes, BW 1544 Kbit, DLY 20000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation PPP, loopback not set, keepalive set (10 sec)
+
+7. Ping test
+B1# ping 10.10.10.2
+B2# ping 10.10.10.1
+
+PPP with CHAP authentication,
+8. Set hostname to B3
+(B3)
+Router>eanable
+Router#configure 
+Router(config)#hostname B3
+
+9. Set IP address to serial 0/0/0
+B3(config)#interface serial 0/0/0
+B3(config-if)#ip address 20.20.20.2 255.255.255.252
+B3(config-if)#no shutdown 
+
+10. set PPP-CHAP encapsulation 
+B3(config-if)#encapsulation ppp
+B3(config-if)#ppp authentication chap
+B3(config-if)#exit
+
+11. Add username MUST add next hostname as username 
+B3(config)#user B2 password cisco
+B3(config)#exit
+
+12. Show interface status
+B3#sh interfaces serial 0/0/0 
+Serial0/0/0 is up, line protocol is up (connected)
+  Hardware is HD64570
+  Internet address is 20.20.20.2/30
+  MTU 1500 bytes, BW 1544 Kbit, DLY 20000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation PPP, loopback not set, keepalive set (10 sec)
+
+
+13. Repeat step 9 - 12 on B2
+  Add username B3 password cisco
+  Set IP address to serial 0/0/1 with 20.20.20.1/30
+  Set PPP-CHAP encapsulation to serial 0/0/1
+
+14. Ping Test and show status from B2 and B3
+
+
+  
+  

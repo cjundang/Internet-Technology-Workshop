@@ -1,0 +1,29 @@
+Outlines
+--------
+1. Packet Tracer
+
+2. IOS Command
+2.1 Basic IOS Command
+2.2 IOS Interfaces
+2.3 Static Route
+2.4 NAT
+2.5 DHCP
+2.6 WAN with PPP
+
+3. Switch
+3.1 L2-Switch
+3.2 Port Security
+3.3 VLAN
+3.4 VLAN with TRUNK
+3.5 Inter-VLAN
+3.6 Port Aggregation
+
+4. Linux
+4.1 Network Configuration
+4.2 PC Router
+4.3 DHCP 
+
+5. Micro-service
+5.1 Basic Docker
+5.2 Webserver with Docker
+5.3 Custom own images

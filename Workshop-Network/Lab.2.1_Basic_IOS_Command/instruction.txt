@@ -1,0 +1,89 @@
+Basic IOS Command
+-----------------
+1. After switch reboot, user in user exec mode gets prompt
+Switch>
+
+2. Change mode to priviledge mode
+Switch> enable
+
+Then, prompt is changed to Switch# 
+
+3. Change mode to user mode with command 
+Switch# disble
+
+4. Logout from devices
+Switch> logout 
+
+5. Help in IOS
+Switch> ?
+Switch# c?
+Switch# show ?
+
+6. Set hostname
+Switch# configure terminal 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)# hostname CoreSW
+CoreSW(config)# exit
+CoreSW#
+
+7. Set Banner
+CoreSW# configure terminal 
+Enter configuration commands, one per line.  End with CNTL/Z.
+CoreSW(config)# banner motd $
+Enter TEXT message.  End with the character '$'.
+================================================
+# Admin Email: cjundang@gmail.com              #
+# Tel No.: 075672209                           #
+================================================
+$
+
+8. Logout from switch and login again
+CoreSW(config)#exit
+CoreSW#
+%SYS-5-CONFIG_I: Configured from console by console
+CoreSW#exit
+CoreSW con0 is now available
+
+Press RETURN to get started.
+
+================================================
+# Admin Email: cjundang@gmail.com              #
+# Tel No.: 075672209                           #
+================================================
+
+CoreSW>
+
+9. Password, to set login password for devices
+CoreSW>enable
+CoreSW#configure terminal 
+Enter configuration commands, one per line.  End with CNTL/Z.
+CoreSW(config)#line console 0
+CoreSW(config-line)#password cisco  , for this case, password is "cisco"
+CoreSW(config-line)#login
+CoreSW(config-line)#exit
+CoreSW(config)#exit
+CoreSW#exit
+
+test, logout and login again
+User Access Verification
+
+Password: <cisco>
+
+CoreSW>
+
+10. Priviledge password
+
+CoreSW>enable 
+CoreSW# configure terminal 
+Enter configuration commands, one per line.  End with CNTL/Z. 
+CoreSW(config)# enable secret cisco 
+CoreSW(config)# exit 
+CoreSW# 
+%SYS-5-CONFIG_I: Configured from console by console 
+CoreSW#exit
+
+test, 
+CoreSW> 
+CoreSW>enable Password: <cisco> 
+CoreSW#
+

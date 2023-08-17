@@ -1,0 +1,190 @@
+IOS Interfaces
+--------------
+1. Interfaces of switch,
+Switch# show ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+FastEthernet0/1        unassigned      YES manual down                  down 
+FastEthernet0/2        unassigned      YES manual down                  down 
+FastEthernet0/3        unassigned      YES manual down                  down 
+FastEthernet0/4        unassigned      YES manual down                  down 
+FastEthernet0/5        unassigned      YES manual down                  down 
+FastEthernet0/6        unassigned      YES manual down                  down 
+FastEthernet0/7        unassigned      YES manual down                  down 
+
+2. Interface of router, 
+Router#show ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     unassigned      YES unset  administratively down down 
+GigabitEthernet0/1     unassigned      YES unset  administratively down down 
+Serial0/0/0            unassigned      YES unset  administratively down down 
+Serial0/0/1            unassigned      YES unset  administratively down down 
+Vlan1                  unassigned      YES unset  administratively down down
+
+3. IOS Interface,
+Switch# show interfaces fastEthernet 0/1
+FastEthernet0/1 is down, line protocol is down (disabled)
+  Hardware is Lance, address is 0000.0c7b.5201 (bia 0000.0c7b.5201)
+ BW 100000 Kbit, DLY 1000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Half-duplex, 100Mb/s
+  input flow-control is off, output flow-control is off
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:08, output 00:00:05, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue :0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     956 packets input, 193351 bytes, 0 no buffer
+     Received 956 broadcasts, 0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 watchdog, 0 multicast, 0 pause input
+     0 input packets with dribble condition detected
+     2357 packets output, 263570 bytes, 0 underruns
+
+4. Connect computer at port fa0/1, then check port status again
+Switch# show interfaces fastEthernet 0/1
+FastEthernet0/1 is up, line protocol is up (connected)
+
+5. Configure IP address to interface,
+Router>enable 
+Router#show ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     unassigned      YES unset  administratively down down 
+GigabitEthernet0/1     unassigned      YES unset  administratively down down 
+Serial0/0/0            unassigned      YES unset  administratively down down 
+Serial0/0/1            unassigned      YES unset  administratively down down 
+Vlan1                  unassigned      YES unset  administratively down down
+
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#interface gigabitEthernet 0/0
+Router(config-if)#ip address 10.0.1.1 255.255.255.0
+Router(config-if)#no shutdown 
+
+%LINK-5-CHANGED: Interface GigabitEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0, changed state to up
+Router(config-if)#exit
+Router(config)#exit
+
+Router#sh ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     10.0.1.1        YES manual up                    up 
+GigabitEthernet0/1     unassigned      YES unset  administratively down down 
+Serial0/0/0            unassigned      YES unset  administratively down down 
+Serial0/0/1            unassigned      YES unset  administratively down down 
+Vlan1                  unassigned      YES unset  administratively down down
+
+6. Set IP addess to serial interface. Connect two 1900 routers with serial cable at serial0/0/0 for both router. Then assign two rouers named Router1 and Router2,
+
+(At router1)
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname Router1
+Router1(config)#exit
+
+Router1#show controllers serial 0/0/0
+Interface Serial0/0/0
+Hardware is PowerQUICC MPC860
+DCE V.35, clock rate 2000000
+
+(At router2)
+Router#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname Router2
+Router2(config)#exit
+
+Router2#show controllers serial 0/0/0
+Interface Serial0/0/0
+Hardware is PowerQUICC MPC860
+DTE V.35 TX and RX clocks detected
+
+Whitch one is DCE router?________________________
+
+7. Set IP address and clock rate to DCE, in this case, set up in Router1
+
+Router1#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router1(config)#interface serial 0/0/0
+Router1(config-if)#ip address 202.28.68.1 255.255.255.252
+Router1(config-if)#clock rate 148000 
+Router1(config-if)#no shutdown 
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to down
+Router1(config-if)#
+
+8. Set another router as 202.28.68.2/30 at serial 0/0/0
+
+Router2#configure 
+Configuring from terminal, memory, or network [terminal]? 
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router2(config)#interface serial 0/0/0
+Router2(config-if)#ip address 202.28.68.2 255.255.255.252
+Router2(config-if)#no shutdown 
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+
+9. Check interface status in Router1 and Router2,
+
+Router1#show ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     10.0.1.1        YES manual up                    up 
+GigabitEthernet0/1     unassigned      YES unset  administratively down down 
+Serial0/0/0            202.28.68.1     YES manual up                    up 
+Serial0/0/1            unassigned      YES unset  administratively down down 
+Vlan1                  unassigned      YES unset  administratively down down
+
+Router2#show ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     unassigned      YES unset  administratively down down 
+GigabitEthernet0/1     unassigned      YES unset  administratively down down 
+Serial0/0/0            202.28.68.2     YES manual up                    up 
+Serial0/0/1            unassigned      YES unset  administratively down down 
+Vlan1                  unassigned      YES unset  administratively down down
+Router2#
+
+10. Save configuration for next reboot,
+
+To show current running congfigure file,
+Router1#show running-config 
+Building configuration...
+
+Current configuration : 773 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Router1
+!
+
+To show current startup congfigure file,
+Router1#show startup-config 
+startup-config is not present
+
+To save current running file as startup file,
+Router1#copy running-config startup-config 
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+
+Show startup file again,
+Router1#sh startup-config 
+Using 773 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Router1
+!
+!
