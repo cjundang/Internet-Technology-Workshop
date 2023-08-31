@@ -691,6 +691,23 @@ Gig0/1      10
 Port        Vlans in spanning tree forwarding state and not pruned
 Gig0/1      none
 ```
+#### Inter-VLAN
+
+(Router1)
+```
+Router#configure 
+Router(config)#interface gigabitEthernet 0/1.1
+Router(config-subif)#encapsulation dot1Q 100
+Router(config-subif)#ip address 20.0.100.1 255.255.255.0
+Router(config-subif)#exit
+Router(config)#interface gigabitEthernet 0/1.2
+Router(config-subif)#encapsulation dot1Q 200
+Router(config-subif)#ip address 20.0.200.1 255.255.255.0
+Router(config-subif)#exit
+Router(config)#interface gigabitEthernet 0/1
+Router(config-if)#shutdown 
+Router(config-if)# exit
+```
 
 #### __3. Statics Route__
 
