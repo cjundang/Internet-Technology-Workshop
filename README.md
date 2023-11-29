@@ -705,7 +705,7 @@ Router(config-subif)#encapsulation dot1Q 200
 Router(config-subif)#ip address 20.0.200.1 255.255.255.0
 Router(config-subif)#exit
 Router(config)#interface gigabitEthernet 0/1
-Router(config-if)#shutdown 
+Router(config-if)# no shutdown 
 Router(config-if)# exit
 ```
 
