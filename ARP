@@ -1,0 +1,25 @@
+The Address Resolution Protocol (ARP) is a fundamental network protocol used in IP networks for mapping an IP address to a Media Access Control (MAC) address that is recognized in the local network. A table, usually called the ARP cache, is used to maintain a correlation between each MAC address and its corresponding IP address. ARP allows devices on a local network to find each other at the data link layer (Layer 2) through their IP addresses at the network layer (Layer 3).
+
+### How ARP Works
+
+1. **ARP Request**: 
+   - When a device (let’s call it Device A) wants to communicate with another device (Device B) on the same local network, it needs to find out Device B's physical MAC address. However, it only knows Device B's IP address.
+   - Device A sends an ARP request packet across the network. This packet contains the IP address that Device A is interested in contacting and a broadcast MAC address (FF:FF:FF:FF:FF:FF), meaning that all devices on the local network segment will receive it. The packet asks, "Who has this IP address? Tell [Device A’s MAC address]."
+
+2. **ARP Reply**:
+   - All devices on the local network segment receive the ARP request, but only the device with the matching IP address (Device B) responds. Device B sends back an ARP reply, which is not broadcast but sent directly to Device A’s MAC address. This reply includes Device B's MAC address.
+
+3. **Caching**:
+   - Once Device A receives the ARP reply containing the MAC address of Device B, it stores this information in its ARP cache. The ARP cache maintains a mapping of IP addresses to MAC addresses. Entries in the ARP cache have a time-to-live (TTL) after which they expire and may be refreshed with a new ARP request if communication resumes.
+
+4. **Communication**:
+   - With the MAC address resolved, Device A can now frame packets destined for Device B using the correct MAC address, enabling effective communication over the network.
+
+### Security Considerations
+
+While ARP is widely used and crucial for network communications, it has vulnerabilities that can be exploited, such as ARP spoofing or ARP poisoning. In such attacks, a malicious device sends false ARP messages to a network. This can lead devices on the network to associate the attacker’s MAC address with the IP address of another device (like a gateway), causing any traffic meant for that IP address to be sent to the attacker instead.
+
+Network administrators often implement security measures like Dynamic ARP Inspection (DAI) on switches to mitigate ARP-related threats by ensuring that only valid ARP requests and responses are relayed or connected to the network.
+
+ARP remains a critical protocol for network communication, particularly within local area networks (LANs). Its simplicity in linking the network and physical address information is foundational, despite potential security challenges.
+
