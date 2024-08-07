@@ -16,18 +16,20 @@ __Switch Catalyst 2960__
 
 <img src='cisco/switch.png'/>
 
+__prompt cycle__
+<img src="https://www.mustbegeek.com/wp-content/uploads/2017/03/Understanding-Cisco-IOS-Command-Line-Modes-Flowchart.png" />
 
 ### __CISCO Command__
 #### __1. Basic IOS Command__
-1. After router reboot, user in user exec mode gets prompt
+1. After router reboot, a user in user exec mode gets a prompt
 ```
 Router>
 ```
-2. Change mode to priviledge mode
+2. Change mode to privileged mode
 ```
 Router> enable
 ```
-Then, prompt is changed to Router# 
+Then, the prompt is changed to Router# 
 
 3. Change mode to user mode with command 
 ```
@@ -67,7 +69,7 @@ Enter TEXT message.  End with the character '$'.
 $
 ```
 
-8. Logout from switch and login again
+8. Logout from the switch and log in again
 ```
 Gateway(config)# exit
 Gateway#
@@ -84,7 +86,7 @@ Press RETURN to get started.
 
 Gateway>
 ```
-9. Password, to set login password for devices
+9. Password, to set a login password for devices
 ```
 Gateway> enable
 Gateway# configure terminal 
@@ -105,7 +107,7 @@ Password: <cisco>
 Gateway>
 ```
 
-10. Priviledge password
+10. Privilege password
 ```
 Gateway> enable 
 Gateway# configure terminal 
